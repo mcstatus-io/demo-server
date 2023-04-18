@@ -1,0 +1,40 @@
+java_status:
+  enable: true
+  host: 0.0.0.0
+  port: 25565
+  disconnect_reason:
+    color: red
+    extra:
+      - text: "This is a demo server for status retrieval only, you cannot play on this server. You can read more here:\n"
+      - text: "https://github.com/mcstatus-io/demo-server"
+bedrock_status:
+  enable: true
+  host: 0.0.0.0
+  port: 19132
+query:
+  enable: true
+  host: 0.0.0.0
+  port: 25565
+players:
+  online:
+    value: 0
+    random: true
+    min: 50
+    max: 100
+  max:
+    value: 100
+    random: false
+    min: 0
+    max: 0
+  sample:
+    - username: Notch
+      uuid: 069a79f4-44e9-4726-a5be-fca90e38aaf5
+    - username: Dinnerbone
+      uuid: 61699b2e-d327-4a01-9f1e-0ea8c3f06bc6
+    - username: PassTheMayo
+      uuid: 85e5f06e-ff89-4c11-8050-329e8fdc29de
+version:
+  name: Paper 1.19.4
+  protocol: 762
+motd:
+  text: A Minecraft Server

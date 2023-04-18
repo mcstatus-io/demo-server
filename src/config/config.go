@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"os"
@@ -9,22 +9,20 @@ import (
 // Config is the configuration data for this application.
 type Config struct {
 	JavaStatus struct {
-		Enable         bool   `yaml:"enable"`
-		Host           string `yaml:"host"`
-		Port           uint16 `yaml:"port"`
-		LogConnections bool   `yaml:"log_connections"`
+		Enable           bool   `yaml:"enable"`
+		Host             string `yaml:"host"`
+		Port             uint16 `yaml:"port"`
+		DisconnectReason Chat   `yaml:"disconnect_reason"`
 	} `yaml:"java_status"`
 	BedrockStatus struct {
-		Enable         bool   `yaml:"enable"`
-		Host           string `yaml:"host"`
-		Port           uint16 `yaml:"port"`
-		LogConnections bool   `yaml:"log_connections"`
+		Enable bool   `yaml:"enable"`
+		Host   string `yaml:"host"`
+		Port   uint16 `yaml:"port"`
 	} `yaml:"bedrock_status"`
 	Query struct {
-		Enable         bool   `yaml:"enable"`
-		Host           string `yaml:"host"`
-		Port           uint16 `yaml:"port"`
-		LogConnections bool   `yaml:"log_connections"`
+		Enable bool   `yaml:"enable"`
+		Host   string `yaml:"host"`
+		Port   uint16 `yaml:"port"`
 	} `yaml:"query"`
 	Players struct {
 		Online struct {
@@ -39,13 +37,16 @@ type Config struct {
 			Min    int  `yaml:"min"`
 			Max    int  `yaml:"max"`
 		} `yaml:"max"`
-		Sample []string `yaml:"sample"`
+		Sample []struct {
+			Username string `yaml:"username"`
+			UUID     string `yaml:"uuid"`
+		} `yaml:"sample"`
 	} `yaml:"players"`
 	Version struct {
 		Name     string `yaml:"name"`
 		Protocol int    `yaml:"protocol"`
 	} `yaml:"version"`
-	MOTD string `yaml:"motd"`
+	MOTD Chat `yaml:"motd"`
 }
 
 // ReadFile reads the YAML file from the path.
