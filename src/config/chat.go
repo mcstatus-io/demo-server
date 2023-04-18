@@ -15,6 +15,19 @@ type Chat struct {
 	Extra         []Chat      `yaml:"extra" json:"extra,omitempty"`
 }
 
+// TODO rewrite this method to correctly convert Chat into the legacy system, allowing inheritance
+func (c Chat) String() string {
+	value := c.Text
+
+	if c.Extra != nil {
+		for _, e := range c.Extra {
+			value += e.String()
+		}
+	}
+
+	return value
+}
+
 // ClickEvent is a Minecraft `clickEvent` serialized in the Chat object.
 type ClickEvent struct {
 	Action string `yaml:"action" json:"action"`

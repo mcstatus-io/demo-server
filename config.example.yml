@@ -15,6 +15,7 @@ query:
   enable: true
   host: 0.0.0.0
   port: 25565
+  global_session_expiration: 30s
 players:
   online:
     value: 0
@@ -38,3 +39,18 @@ version:
   protocol: 762
 motd:
   text: A Minecraft Server
+mods:
+  enable: true
+  fml_version: 2
+  mods:
+    - id: jei
+      version: "13.1.0.6"
+    - id: mouse-tweaks
+      version: "2.24"
+    - id: bookshelf
+      version: "18.0.2"
+software: "Paper 1.19.4 on Demo"
+plugins:
+  - name: EssentialsX
+    version: 2.19.7
+map_name: world

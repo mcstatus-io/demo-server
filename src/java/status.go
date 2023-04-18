@@ -2,7 +2,8 @@ package java
 
 import (
 	"main/src/config"
-	"math/rand"
+
+	"main/src/util"
 )
 
 type status struct {
@@ -10,6 +11,8 @@ type status struct {
 	Players     players     `json:"players"`
 	Description config.Chat `json:"description"`
 	Favicon     string      `json:"favicon,omitempty"`
+	ModInfo     *modInfo    `json:"modinfo,omitempty"`
+	ForgeData   *forgeData  `json:"forgeData,omitempty"`
 }
 
 type version struct {
@@ -28,6 +31,27 @@ type samplePlayer struct {
 	UUID     string `json:"id"`
 }
 
+type modInfo struct {
+	Type    string      `json:"type"`
+	ModList []legacyMod `json:"modList"`
+}
+
+type legacyMod struct {
+	ID      string `json:"modid"`
+	Version string `json:"version"`
+}
+
+type forgeData struct {
+	Channels          []interface{} `json:"channels"`
+	Mods              []forgeMod    `json:"mods"`
+	FMLNetworkVersion int           `json:"fmlNetworkVersion"`
+}
+
+type forgeMod struct {
+	ID      string `json:"modId"`
+	Version string `json:"modmarker"`
+}
+
 func getStatusResponse() (result status) {
 	result = status{
 		Version: version{
@@ -35,22 +59,12 @@ func getStatusResponse() (result status) {
 			Protocol: conf.Version.Protocol,
 		},
 		Players: players{
+			Online: util.GetOnlinePlayerCount(conf),
+			Max:    util.GetMaxPlayerCount(conf),
 			Sample: make([]samplePlayer, 0),
 		},
 		Description: conf.MOTD,
 		Favicon:     favicon,
-	}
-
-	if conf.Players.Online.Random {
-		result.Players.Online = rand.Intn(conf.Players.Online.Max-conf.Players.Online.Min) + conf.Players.Online.Min
-	} else {
-		result.Players.Online = conf.Players.Online.Value
-	}
-
-	if conf.Players.Max.Random {
-		result.Players.Max = rand.Intn(conf.Players.Max.Max-conf.Players.Max.Min) + conf.Players.Max.Min
-	} else {
-		result.Players.Max = conf.Players.Max.Value
 	}
 
 	for _, player := range conf.Players.Sample {
@@ -58,6 +72,44 @@ func getStatusResponse() (result status) {
 			Username: player.Username,
 			UUID:     player.UUID,
 		})
+	}
+
+	if conf.Mods.Enable {
+		switch conf.Mods.FMLVersion {
+		case 1:
+			{
+				result.ModInfo = &modInfo{
+					Type:    "FML",
+					ModList: make([]legacyMod, 0),
+				}
+
+				for _, mod := range conf.Mods.Mods {
+					result.ModInfo.ModList = append(result.ModInfo.ModList, legacyMod{
+						ID:      mod.ID,
+						Version: mod.Version,
+					})
+				}
+
+				break
+			}
+		case 2:
+			{
+				result.ForgeData = &forgeData{
+					FMLNetworkVersion: 2,
+					Channels:          make([]interface{}, 0),
+					Mods:              make([]forgeMod, 0),
+				}
+
+				for _, mod := range conf.Mods.Mods {
+					result.ForgeData.Mods = append(result.ForgeData.Mods, forgeMod{
+						ID:      mod.ID,
+						Version: mod.Version,
+					})
+				}
+
+				break
+			}
+		}
 	}
 
 	return

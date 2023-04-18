@@ -7,6 +7,7 @@ import (
 
 	"main/src/config"
 	"main/src/java"
+	"main/src/query"
 )
 
 var (
@@ -28,6 +29,14 @@ func init() {
 		log.Printf("Listening for Java Edition statuses on %s:%d\n", conf.JavaStatus.Host, conf.JavaStatus.Port)
 	}
 
+	if conf.Query.Enable {
+		if err = query.Listen(conf); err != nil {
+			log.Fatal(err)
+		}
+
+		log.Printf("Listening for query connections on %s:%d\n", conf.Query.Host, conf.Query.Port)
+	}
+
 }
 
 func main() {
@@ -35,6 +44,12 @@ func main() {
 		defer java.Close()
 
 		go java.AcceptConnections()
+	}
+
+	if conf.Query.Enable {
+		defer query.Close()
+
+		go query.AcceptConnections()
 	}
 
 	s := make(chan os.Signal, 1)

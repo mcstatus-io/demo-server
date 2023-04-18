@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"time"
 
 	"gopkg.in/yaml.v3"
 )
@@ -20,9 +21,10 @@ type Config struct {
 		Port   uint16 `yaml:"port"`
 	} `yaml:"bedrock_status"`
 	Query struct {
-		Enable bool   `yaml:"enable"`
-		Host   string `yaml:"host"`
-		Port   uint16 `yaml:"port"`
+		Enable                  bool          `yaml:"enable"`
+		Host                    string        `yaml:"host"`
+		Port                    uint16        `yaml:"port"`
+		GlobalSessionExpiration time.Duration `yaml:"global_session_expiration"`
 	} `yaml:"query"`
 	Players struct {
 		Online struct {
@@ -47,6 +49,20 @@ type Config struct {
 		Protocol int    `yaml:"protocol"`
 	} `yaml:"version"`
 	MOTD Chat `yaml:"motd"`
+	Mods struct {
+		Enable     bool `yaml:"enable"`
+		FMLVersion int  `yaml:"fml_version"`
+		Mods       []struct {
+			ID      string `yaml:"id"`
+			Version string `yaml:"version"`
+		} `yaml:"mods"`
+	} `yaml:"mods"`
+	Software string `yaml:"software"`
+	Plugins  []struct {
+		Name    string `yaml:"name"`
+		Version string `yaml:"version"`
+	} `yaml:"plugins"`
+	MapName string `yaml:"map_name"`
 }
 
 // ReadFile reads the YAML file from the path.
