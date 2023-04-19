@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"main/src/config"
+	"main/src/util"
 )
 
 var (
@@ -89,12 +90,18 @@ func handleConnection(conn net.Conn) {
 		}
 	case nextStateLogin:
 		{
-			if err = readLoginStartPacket(conn); err != nil {
+			uuid, err := readLoginStartPacket(conn)
+
+			if err != nil {
 				return
 			}
 
 			if err = writeDisconnectPacket(conn, conf.JavaStatus.DisconnectReason); err != nil {
 				return
+			}
+
+			if uuid != nil {
+				go util.AddSamplePlayer(*uuid)
 			}
 
 			return

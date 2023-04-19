@@ -7,6 +7,8 @@ java_status:
     extra:
       - text: "This is a demo server for status retrieval only, you cannot play on this server. You can read more here:\n"
       - text: "https://github.com/mcstatus-io/demo-server"
+  add_logins_to_sample_players: true
+  add_logins_to_sample_players_limit: 12
 bedrock_status:
   enable: true
   host: 0.0.0.0

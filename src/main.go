@@ -8,6 +8,7 @@ import (
 	"main/src/config"
 	"main/src/java"
 	"main/src/query"
+	"main/src/util"
 )
 
 var (
@@ -37,6 +38,7 @@ func init() {
 		log.Printf("Listening for query connections on %s:%d\n", conf.Query.Host, conf.Query.Port)
 	}
 
+	util.SetSamplePlayers(conf.Players.Sample)
 }
 
 func main() {

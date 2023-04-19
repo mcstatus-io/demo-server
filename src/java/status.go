@@ -21,9 +21,9 @@ type version struct {
 }
 
 type players struct {
-	Online int            `json:"online"`
-	Max    int            `json:"max"`
-	Sample []samplePlayer `json:"sample"`
+	Online int                   `json:"online"`
+	Max    int                   `json:"max"`
+	Sample []config.SamplePlayer `json:"sample"`
 }
 
 type samplePlayer struct {
@@ -61,17 +61,10 @@ func getStatusResponse() (result status) {
 		Players: players{
 			Online: util.GetOnlinePlayerCount(conf),
 			Max:    util.GetMaxPlayerCount(conf),
-			Sample: make([]samplePlayer, 0),
+			Sample: util.GetSamplePlayers(),
 		},
 		Description: conf.MOTD,
 		Favicon:     favicon,
-	}
-
-	for _, player := range conf.Players.Sample {
-		result.Players.Sample = append(result.Players.Sample, samplePlayer{
-			Username: player.Username,
-			UUID:     player.UUID,
-		})
 	}
 
 	if conf.Mods.Enable {

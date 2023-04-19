@@ -3,6 +3,7 @@ package java
 import (
 	"bytes"
 	"encoding/binary"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -160,21 +161,21 @@ func writePongPacket(w io.Writer, payload int64) error {
 }
 
 // [C -> S] Login Start (0x00)
-func readLoginStartPacket(r io.Reader) error {
+func readLoginStartPacket(r io.Reader) (*string, error) {
 	packetType, data, err := readPacket(r)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if packetType != 0x00 {
-		return fmt.Errorf("login start: unexpected packet type: 0x%02X", packetType)
+		return nil, fmt.Errorf("login start: unexpected packet type: 0x%02X", packetType)
 	}
 
 	// 1. Name - string
 	{
 		if _, err = readString(data); err != nil {
-			return err
+			return nil, err
 		}
 	}
 
@@ -185,28 +186,33 @@ func readLoginStartPacket(r io.Reader) error {
 		uuid, err := data.ReadByte()
 
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		hasUUID = uuid == 1
 	}
 
+	var uuid *string = nil
+
 	// 3. Optional UUID
 	{
 		if hasUUID {
-			uuid := make([]byte, 16)
+			uuidData := make([]byte, 16)
 
-			if _, err := data.Read(uuid); err != nil {
-				return err
+			if _, err := data.Read(uuidData); err != nil {
+				return nil, err
 			}
+
+			value := hex.EncodeToString(uuidData)
+			uuid = &value
 		}
 	}
 
 	if data.Len() > 0 {
-		return fmt.Errorf("login start: %d bytes left over at end of packet", data.Len())
+		return nil, fmt.Errorf("login start: %d bytes left over at end of packet", data.Len())
 	}
 
-	return nil
+	return uuid, nil
 }
 
 // [C <- S] Pong (0x01)

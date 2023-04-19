@@ -1,2 +1,2 @@
-# demo-server
-A status-only demo Minecraft server built to showcase mcstatus.io features.
+# Demo Server
+This is a software used to emulate a Minecraft server for status/query only. This is not a playable server, and you will be disconnected if you attempt to connect. This software is meant to showcase the available features of mcstatus.io, a status retrieval site. This software can simulate a real server, running a Java Edition and Bedrock Edition status, as well as full query support.
