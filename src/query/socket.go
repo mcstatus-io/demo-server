@@ -3,7 +3,6 @@ package query
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"net"
 	"time"
 
@@ -82,15 +81,11 @@ func handlePacket(data []byte, addr net.Addr) {
 			isFullStat, err := readRequestPacket(r, buf, sessionID)
 
 			if err != nil {
-				log.Println(err)
-
 				return
 			}
 
 			if isFullStat {
 				if err = writeFullStatPacket(buf, sessionID); err != nil {
-					log.Println(err)
-
 					return
 				}
 			} else {

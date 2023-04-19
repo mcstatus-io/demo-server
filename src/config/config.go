@@ -104,5 +104,11 @@ func (c *Config) ReadFile(file string) error {
 		return err
 	}
 
-	return yaml.Unmarshal(data, c)
+	if err := yaml.Unmarshal(data, c); err != nil {
+		return err
+	}
+
+	c.JavaEdition.Options.MOTD = c.JavaEdition.Options.MOTD.FixControlCharacters()
+
+	return nil
 }

@@ -1,5 +1,7 @@
 package config
 
+import "strings"
+
 // Chat is a Minecraft formatted Chat object, see: https://wiki.vg/Chat.
 type Chat struct {
 	Text          string      `yaml:"text" json:"text"`
@@ -13,6 +15,21 @@ type Chat struct {
 	ClickEvent    *ClickEvent `yaml:"click_event" json:"clickEvent,omitempty"`
 	HoverEvent    *HoverEvent `yaml:"hover_event" json:"hoverEvent,omitempty"`
 	Extra         []Chat      `yaml:"extra" json:"extra,omitempty"`
+}
+
+// FixControlCharacters returns a copy of the Chat with new-line control characters corrected in the Text property.
+func (c Chat) FixControlCharacters() Chat {
+	c.Text = strings.ReplaceAll(c.Text, "\\n", "\n")
+
+	extra := make([]Chat, 0)
+
+	for _, e := range c.Extra {
+		extra = append(extra, e.FixControlCharacters())
+	}
+
+	c.Extra = extra
+
+	return c
 }
 
 // TODO rewrite this method to correctly convert Chat into the legacy system, allowing inheritance

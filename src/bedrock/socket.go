@@ -3,7 +3,6 @@ package bedrock
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"net"
 
 	"main/src/config"
@@ -47,16 +46,12 @@ func handlePacket(data []byte, addr net.Addr) {
 	r := bytes.NewReader(data)
 
 	if err := readUnconnectedPingPacket(r); err != nil {
-		log.Println(err)
-
 		return
 	}
 
 	buf := &bytes.Buffer{}
 
 	if err := writeUnconnectedPongPacket(buf); err != nil {
-		log.Println(err)
-
 		return
 	}
 
