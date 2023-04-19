@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/signal"
 
+	"main/src/bedrock"
 	"main/src/config"
 	"main/src/java"
 	"main/src/query"
@@ -30,6 +31,14 @@ func init() {
 		log.Printf("Listening for Java Edition statuses on %s:%d\n", conf.JavaEdition.Status.Host, conf.JavaEdition.Status.Port)
 	}
 
+	if conf.BedrockEdition.Status.Enable {
+		if err = bedrock.Listen(conf); err != nil {
+			log.Fatal(err)
+		}
+
+		log.Printf("Listening for Bedrock Edition statuses on %s:%d\n", conf.BedrockEdition.Status.Host, conf.BedrockEdition.Status.Port)
+	}
+
 	if conf.JavaEdition.Query.Enable {
 		if err = query.Listen(conf); err != nil {
 			log.Fatal(err)
@@ -46,6 +55,12 @@ func main() {
 		defer java.Close()
 
 		go java.AcceptConnections()
+	}
+
+	if conf.BedrockEdition.Status.Enable {
+		defer bedrock.Close()
+
+		go bedrock.AcceptConnections()
 	}
 
 	if conf.JavaEdition.Query.Enable {
