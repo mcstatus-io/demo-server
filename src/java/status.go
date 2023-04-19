@@ -55,20 +55,20 @@ type forgeMod struct {
 func getStatusResponse() (result status) {
 	result = status{
 		Version: version{
-			Name:     conf.Version.Name,
-			Protocol: conf.Version.Protocol,
+			Name:     conf.JavaEdition.Options.Version.Name,
+			Protocol: conf.JavaEdition.Options.Version.Protocol,
 		},
 		Players: players{
-			Online: util.GetOnlinePlayerCount(conf),
-			Max:    util.GetMaxPlayerCount(conf),
+			Online: util.GetJavaOnlinePlayerCount(conf),
+			Max:    util.GetJavaMaxPlayerCount(conf),
 			Sample: util.GetSamplePlayers(),
 		},
-		Description: conf.MOTD,
+		Description: conf.JavaEdition.Options.MOTD,
 		Favicon:     favicon,
 	}
 
-	if conf.Mods.Enable {
-		switch conf.Mods.FMLVersion {
+	if conf.JavaEdition.Options.Mods.Enable {
+		switch conf.JavaEdition.Options.Mods.FMLVersion {
 		case 1:
 			{
 				result.ModInfo = &modInfo{
@@ -76,7 +76,7 @@ func getStatusResponse() (result status) {
 					ModList: make([]legacyMod, 0),
 				}
 
-				for _, mod := range conf.Mods.Mods {
+				for _, mod := range conf.JavaEdition.Options.Mods.List {
 					result.ModInfo.ModList = append(result.ModInfo.ModList, legacyMod{
 						ID:      mod.ID,
 						Version: mod.Version,
@@ -93,7 +93,7 @@ func getStatusResponse() (result status) {
 					Mods:              make([]forgeMod, 0),
 				}
 
-				for _, mod := range conf.Mods.Mods {
+				for _, mod := range conf.JavaEdition.Options.Mods.List {
 					result.ForgeData.Mods = append(result.ForgeData.Mods, forgeMod{
 						ID:      mod.ID,
 						Version: mod.Version,

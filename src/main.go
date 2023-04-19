@@ -22,33 +22,33 @@ func init() {
 		log.Fatal(err)
 	}
 
-	if conf.JavaStatus.Enable {
+	if conf.JavaEdition.Status.Enable {
 		if err = java.Listen(conf); err != nil {
 			log.Fatal(err)
 		}
 
-		log.Printf("Listening for Java Edition statuses on %s:%d\n", conf.JavaStatus.Host, conf.JavaStatus.Port)
+		log.Printf("Listening for Java Edition statuses on %s:%d\n", conf.JavaEdition.Status.Host, conf.JavaEdition.Status.Port)
 	}
 
-	if conf.Query.Enable {
+	if conf.JavaEdition.Query.Enable {
 		if err = query.Listen(conf); err != nil {
 			log.Fatal(err)
 		}
 
-		log.Printf("Listening for query connections on %s:%d\n", conf.Query.Host, conf.Query.Port)
+		log.Printf("Listening for query connections on %s:%d\n", conf.JavaEdition.Query.Host, conf.JavaEdition.Query.Port)
 	}
 
-	util.SetSamplePlayers(conf.Players.Sample)
+	util.SetSamplePlayers(conf.JavaEdition.Options.Players.Sample)
 }
 
 func main() {
-	if conf.JavaStatus.Enable {
+	if conf.JavaEdition.Status.Enable {
 		defer java.Close()
 
 		go java.AcceptConnections()
 	}
 
-	if conf.Query.Enable {
+	if conf.JavaEdition.Query.Enable {
 		defer query.Close()
 
 		go query.AcceptConnections()

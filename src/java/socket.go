@@ -33,7 +33,7 @@ func init() {
 func Listen(c *config.Config) (err error) {
 	conf = c
 
-	socket, err = net.Listen("tcp", fmt.Sprintf("%s:%d", c.JavaStatus.Host, c.JavaStatus.Port))
+	socket, err = net.Listen("tcp", fmt.Sprintf("%s:%d", c.JavaEdition.Status.Host, c.JavaEdition.Status.Port))
 
 	return
 }
@@ -96,7 +96,7 @@ func handleConnection(conn net.Conn) {
 				return
 			}
 
-			if err = writeDisconnectPacket(conn, conf.JavaStatus.DisconnectReason); err != nil {
+			if err = writeDisconnectPacket(conn, conf.JavaEdition.Status.DisconnectReason); err != nil {
 				return
 			}
 

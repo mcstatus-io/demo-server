@@ -20,7 +20,7 @@ var (
 func Listen(c *config.Config) (err error) {
 	conf = c
 
-	socket, err = net.ListenPacket("udp", fmt.Sprintf("%s:%d", c.Query.Host, c.Query.Port))
+	socket, err = net.ListenPacket("udp", fmt.Sprintf("%s:%d", c.JavaEdition.Query.Host, c.JavaEdition.Query.Port))
 
 	if err == nil {
 		go func() {
@@ -29,7 +29,7 @@ func Listen(c *config.Config) (err error) {
 					delete(sessions, k)
 				}
 
-				time.Sleep(conf.Query.GlobalSessionExpiration)
+				time.Sleep(conf.JavaEdition.Query.GlobalSessionExpiration)
 			}
 		}()
 	}

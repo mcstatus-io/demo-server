@@ -83,7 +83,7 @@ func writeBasicStatPacket(w io.Writer, sessionID int32) error {
 	}
 
 	// MOTD - null-terminated string
-	if err := writeNTString(w, conf.MOTD.String()); err != nil {
+	if err := writeNTString(w, conf.JavaEdition.Options.MOTD.String()); err != nil {
 		return err
 	}
 
@@ -93,27 +93,27 @@ func writeBasicStatPacket(w io.Writer, sessionID int32) error {
 	}
 
 	// Map Name - null-terminated string
-	if err := writeNTString(w, conf.MapName); err != nil {
+	if err := writeNTString(w, conf.JavaEdition.Options.MapName); err != nil {
 		return err
 	}
 
 	// Online Players - null-terminated string
-	if err := writeNTString(w, strconv.FormatInt(int64(util.GetOnlinePlayerCount(conf)), 10)); err != nil {
+	if err := writeNTString(w, strconv.FormatInt(int64(util.GetJavaOnlinePlayerCount(conf)), 10)); err != nil {
 		return err
 	}
 
 	// Max Players - null-terminated string
-	if err := writeNTString(w, strconv.FormatInt(int64(util.GetMaxPlayerCount(conf)), 10)); err != nil {
+	if err := writeNTString(w, strconv.FormatInt(int64(util.GetJavaMaxPlayerCount(conf)), 10)); err != nil {
 		return err
 	}
 
 	// Host Port - little-endian short
-	if err := binary.Write(w, binary.LittleEndian, conf.Query.Port); err != nil {
+	if err := binary.Write(w, binary.LittleEndian, conf.JavaEdition.Query.Port); err != nil {
 		return err
 	}
 
 	// Host IP - null-terminated string
-	if err := writeNTString(w, conf.Query.Host); err != nil {
+	if err := writeNTString(w, conf.JavaEdition.Query.Host); err != nil {
 		return err
 	}
 
@@ -140,21 +140,21 @@ func writeFullStatPacket(w io.Writer, sessionID int32) error {
 	{
 		plugins := make([]string, 0)
 
-		for _, plugin := range conf.Plugins {
+		for _, plugin := range conf.JavaEdition.Options.Plugins {
 			plugins = append(plugins, fmt.Sprintf("%s %s", plugin.Name, plugin.Version))
 		}
 
 		data := map[string]string{
-			"hostname":   conf.MOTD.String(),
+			"hostname":   conf.JavaEdition.Options.MOTD.String(),
 			"game_type":  "SMP",
 			"game_id":    "MINECRAFT",
-			"version":    conf.Version.Name,
-			"plugins":    fmt.Sprintf("%s: %s", conf.Software, strings.Join(plugins, "; ")),
-			"map":        conf.MapName,
-			"numplayers": strconv.FormatInt(int64(util.GetOnlinePlayerCount(conf)), 10),
-			"maxplayers": strconv.FormatInt(int64(util.GetMaxPlayerCount(conf)), 10),
-			"hostport":   strconv.FormatUint(uint64(conf.Query.Port), 10),
-			"hostip":     conf.Query.Host,
+			"version":    conf.JavaEdition.Options.Version.Name,
+			"plugins":    fmt.Sprintf("%s: %s", conf.JavaEdition.Options.Software, strings.Join(plugins, "; ")),
+			"map":        conf.JavaEdition.Options.MapName,
+			"numplayers": strconv.FormatInt(int64(util.GetJavaOnlinePlayerCount(conf)), 10),
+			"maxplayers": strconv.FormatInt(int64(util.GetJavaMaxPlayerCount(conf)), 10),
+			"hostport":   strconv.FormatUint(uint64(conf.JavaEdition.Query.Port), 10),
+			"hostip":     conf.JavaEdition.Query.Host,
 		}
 
 		for key, value := range data {
@@ -179,7 +179,7 @@ func writeFullStatPacket(w io.Writer, sessionID int32) error {
 
 	// Players - null-terminated strings list
 	{
-		for _, player := range conf.Players.Sample {
+		for _, player := range util.GetSamplePlayers() {
 			if err := writeNTString(w, player.Username); err != nil {
 				return err
 			}

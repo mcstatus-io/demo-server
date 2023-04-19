@@ -1,58 +1,80 @@
-java_status:
-  enable: true
-  host: 0.0.0.0
-  port: 25565
-  disconnect_reason:
-    color: red
-    extra:
-      - text: "This is a demo server for status retrieval only, you cannot play on this server. You can read more here:\n"
-      - text: "https://github.com/mcstatus-io/demo-server"
-  add_logins_to_sample_players: true
-  add_logins_to_sample_players_limit: 12
-bedrock_status:
-  enable: true
-  host: 0.0.0.0
-  port: 19132
-query:
-  enable: true
-  host: 0.0.0.0
-  port: 25565
-  global_session_expiration: 30s
-players:
-  online:
-    value: 0
-    random: true
-    min: 50
-    max: 100
-  max:
-    value: 100
-    random: false
-    min: 0
-    max: 0
-  sample:
-    - username: Notch
-      uuid: 069a79f4-44e9-4726-a5be-fca90e38aaf5
-    - username: Dinnerbone
-      uuid: 61699b2e-d327-4a01-9f1e-0ea8c3f06bc6
-    - username: PassTheMayo
-      uuid: 85e5f06e-ff89-4c11-8050-329e8fdc29de
-version:
-  name: Paper 1.19.4
-  protocol: 762
-motd:
-  text: A Minecraft Server
-mods:
-  enable: true
-  fml_version: 2
-  mods:
-    - id: jei
-      version: "13.1.0.6"
-    - id: mouse-tweaks
-      version: "2.24"
-    - id: bookshelf
-      version: "18.0.2"
-software: "Paper 1.19.4 on Demo"
-plugins:
-  - name: EssentialsX
-    version: 2.19.7
-map_name: world
+java_edition:
+  status:
+    enable: true
+    host: 0.0.0.0
+    port: 25565
+    disconnect_reason:
+      color: red
+      extra:
+        - text: 'This is a demo server testing reasons only, you cannot play on this server. You can read more here: https://github.com/mcstatus-io/demo-server'
+    add_logins_to_sample_players: true
+    add_logins_to_sample_players_limit: 12
+  query:
+    enable: true
+    host: 0.0.0.0
+    port: 25565
+    global_session_expiration: 30s
+  options:
+    players:
+      online:
+        value: 0
+        random: true
+        min: 50
+        max: 100
+      max:
+        value: 100
+        random: false
+        min: 0
+        max: 0
+      sample:
+        - username: Notch
+          uuid: 069a79f4-44e9-4726-a5be-fca90e38aaf5
+        - username: Dinnerbone
+          uuid: 61699b2e-d327-4a01-9f1e-0ea8c3f06bc6
+        - username: PassTheMayo
+          uuid: 85e5f06e-ff89-4c11-8050-329e8fdc29de
+    version:
+      name: Paper 1.19.4
+      protocol: 762
+    motd:
+      text: A Minecraft Server
+    mods:
+      enable: true
+      fml_version: 2
+      list:
+        - id: jei
+          version: 13.1.0.6
+        - id: mouse-tweaks
+          version: 2.24
+        - id: bookshelf
+          version: 18.0.2
+    software: Paper 1.19.4 on Demo
+    plugins:
+      - name: EssentialsX
+        version: 2.19.7
+    map_name: world
+bedrock_edition:
+  status:
+    enable: true
+    host: 0.0.0.0
+    port: 19132
+  options:
+    edition: MCPE
+    motd:
+      line_1: A Bedrock server
+      line_2: You cannot connect!
+    version:
+      name: 1.19.70
+      protocol: 575
+    players:
+      online:
+        value: 0
+        random: true
+        min: 50
+        max: 100
+      max:
+        value: 100
+        random: false
+        min: 0
+        max: 0
+    gamemode: survival
