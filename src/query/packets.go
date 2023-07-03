@@ -13,7 +13,10 @@ import (
 
 func writeHandshakePacket(w io.Writer, sessionID int32) error {
 	challengeToken := strconv.FormatInt(int64(rand.Int31()), 10)
+
+	sessionsMutex.Lock()
 	sessions[sessionID] = challengeToken
+	sessionsMutex.Unlock()
 
 	// Type - byte
 	if err := binary.Write(w, binary.BigEndian, byte(0x09)); err != nil {
@@ -34,6 +37,10 @@ func writeHandshakePacket(w io.Writer, sessionID int32) error {
 }
 
 func readRequestPacket(r io.Reader, w io.Writer, sessionID int32) (bool, error) {
+	sessionsMutex.Lock()
+
+	defer sessionsMutex.Unlock()
+
 	if _, ok := sessions[sessionID]; !ok {
 		return false, fmt.Errorf("query: invalid or expired session ID: %X", sessionID)
 	}

@@ -4,15 +4,17 @@ import (
 	"bytes"
 	"fmt"
 	"net"
+	"sync"
 	"time"
 
 	"main/src/config"
 )
 
 var (
-	socket   net.PacketConn   = nil
-	conf     *config.Config   = nil
-	sessions map[int32]string = make(map[int32]string)
+	socket        net.PacketConn   = nil
+	conf          *config.Config   = nil
+	sessions      map[int32]string = make(map[int32]string)
+	sessionsMutex *sync.Mutex      = &sync.Mutex{}
 )
 
 // Listen creates a new TCP socket server using the address specified in the configuration file.
@@ -24,9 +26,13 @@ func Listen(c *config.Config) (err error) {
 	if err == nil {
 		go func() {
 			for {
+				sessionsMutex.Lock()
+
 				for k := range sessions {
 					delete(sessions, k)
 				}
+
+				sessionsMutex.Unlock()
 
 				time.Sleep(conf.JavaEdition.Query.GlobalSessionExpiration)
 			}
