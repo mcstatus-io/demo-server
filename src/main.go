@@ -10,6 +10,7 @@ import (
 	"main/src/java"
 	"main/src/query"
 	"main/src/util"
+	"main/src/vote"
 )
 
 var (
@@ -47,6 +48,14 @@ func init() {
 		log.Printf("Listening for query connections on %s:%d\n", conf.JavaEdition.Query.Host, conf.JavaEdition.Query.Port)
 	}
 
+	if conf.Votifier.Enable {
+		if err = vote.Listen(conf); err != nil {
+			log.Fatal(err)
+		}
+
+		log.Printf("Listening for Votifier on %s:%d\n", conf.Votifier.Host, conf.Votifier.Port)
+	}
+
 	util.SetSamplePlayers(conf.JavaEdition.Options.Players.Sample)
 }
 
@@ -67,6 +76,12 @@ func main() {
 		defer query.Close()
 
 		go query.AcceptConnections()
+	}
+
+	if conf.Votifier.Enable {
+		defer vote.Close()
+
+		go vote.AcceptConnections()
 	}
 
 	s := make(chan os.Signal, 1)

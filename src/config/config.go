@@ -94,6 +94,12 @@ type Config struct {
 			Gamemode string `yaml:"gamemode"`
 		} `yaml:"options"`
 	} `yaml:"bedrock_edition"`
+	Votifier struct {
+		Enable bool   `yaml:"enable"`
+		Host   string `yaml:"host"`
+		Port   uint16 `yaml:"port"`
+		Token  string `yaml:"token"`
+	} `yaml:"votifier"`
 }
 
 // ReadFile reads the YAML file from the path.
