@@ -13,7 +13,7 @@ import (
 var (
 	socket        net.PacketConn   = nil
 	conf          *config.Config   = nil
-	sessions      map[int32]string = make(map[int32]string)
+	sessions      map[string]string = make(map[string]string) // Map of net.Addr.String() to challenge string
 	sessionsMutex *sync.Mutex      = &sync.Mutex{}
 )
 
@@ -76,7 +76,7 @@ func handlePacket(data []byte, addr net.Addr) {
 	switch packetType {
 	case 0x09: // Generate challenge token
 		{
-			if err = writeHandshakePacket(buf, sessionID); err != nil {
+			if err = writeHandshakePacket(buf, addr, sessionID); err != nil {
 				return
 			}
 
@@ -84,7 +84,7 @@ func handlePacket(data []byte, addr net.Addr) {
 		}
 	case 0x00: // Request
 		{
-			isFullStat, err := readRequestPacket(r, buf, sessionID)
+			isFullStat, err := readRequestPacket(r, buf, addr, sessionID)
 
 			if err != nil {
 				return

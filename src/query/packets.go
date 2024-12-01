@@ -5,17 +5,18 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net"
 	"main/src/util"
 	"math/rand"
 	"strconv"
 	"strings"
 )
 
-func writeHandshakePacket(w io.Writer, sessionID int32) error {
+func writeHandshakePacket(w io.Writer, addr net.Addr, sessionID int32) error {
 	challengeToken := strconv.FormatInt(int64(rand.Int31()), 10)
 
 	sessionsMutex.Lock()
-	sessions[sessionID] = challengeToken
+	sessions[addr.String()] = challengeToken
 	sessionsMutex.Unlock()
 
 	// Type - byte
@@ -36,13 +37,13 @@ func writeHandshakePacket(w io.Writer, sessionID int32) error {
 	return nil
 }
 
-func readRequestPacket(r io.Reader, w io.Writer, sessionID int32) (bool, error) {
+func readRequestPacket(r io.Reader, w io.Writer, addr net.Addr, sessionID int32) (bool, error) {
 	sessionsMutex.Lock()
 
 	defer sessionsMutex.Unlock()
 
-	if _, ok := sessions[sessionID]; !ok {
-		return false, fmt.Errorf("query: invalid or expired session ID: %X", sessionID)
+	if _, ok := sessions[addr.String()]; !ok {
+		return false, fmt.Errorf("query: no currently active challenges for %s", addr.String())
 	}
 
 	// Challenge Token - int32
@@ -53,7 +54,7 @@ func readRequestPacket(r io.Reader, w io.Writer, sessionID int32) (bool, error) 
 			return false, err
 		}
 
-		if sessions[sessionID] != strconv.FormatInt(int64(challengeToken), 10) {
+		if sessions[addr.String()] != strconv.FormatInt(int64(challengeToken), 10) {
 			return false, fmt.Errorf("query: received challenge token did not match stored")
 		}
 	}
