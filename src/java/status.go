@@ -42,9 +42,9 @@ type legacyMod struct {
 }
 
 type forgeData struct {
-	Channels          []interface{} `json:"channels"`
-	Mods              []forgeMod    `json:"mods"`
-	FMLNetworkVersion int           `json:"fmlNetworkVersion"`
+	Channels          []any      `json:"channels"`
+	Mods              []forgeMod `json:"mods"`
+	FMLNetworkVersion int        `json:"fmlNetworkVersion"`
 }
 
 type forgeMod struct {
@@ -89,7 +89,7 @@ func getStatusResponse() (result status) {
 			{
 				result.ForgeData = &forgeData{
 					FMLNetworkVersion: 2,
-					Channels:          make([]interface{}, 0),
+					Channels:          make([]any, 0),
 					Mods:              make([]forgeMod, 0),
 				}
 

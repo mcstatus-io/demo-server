@@ -53,6 +53,6 @@ type ClickEvent struct {
 
 // HoverEvent is a Minecraft `hoverEvent` serialized in the Chat object.
 type HoverEvent struct {
-	Action   string      `yaml:"action" json:"action"`
-	Contents interface{} `yaml:"contents" json:"contents"`
+	Action   string `yaml:"action" json:"action"`
+	Contents any    `yaml:"contents" json:"contents"`
 }
